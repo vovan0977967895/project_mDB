@@ -52,11 +52,20 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
         addForm.addEventListener('submit', (event)=>{
             event.preventDefault();// отменяем стандартное поведение браузера
-            const newFilm = addInput.value;
+            let newFilm = addInput.value;
             const favorite = checkbox.checked;
-            movieDB.movies.push(newFilm);
-            sortArr(movieDB.movies);
-            createMovieList(movieDB.movies, moveList);
+
+            if(newFilm){
+                if(newFilm.length > 21){
+                    newFilm = `${newFilm.substring(0,20)}...`;
+                }
+                if(favorite){
+                    console.log("Добавляем любимый фильм");
+                }
+                movieDB.movies.push(newFilm);
+                sortArr(movieDB.movies);
+                createMovieList(movieDB.movies, moveList);
+            };
             event.target.reset();
         });
         const deleteAdv = (arr) =>{
@@ -80,18 +89,25 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     function createMovieList(films, parent){
         parent.innerHTML = '';
-        
+        sortArr(films);
         films.forEach((film, i)=>{
             parent.innerHTML += `<li class="promo__interactive-item">${i+1} ${film}<div class="delete"></div>
             </li>`; 
+        });
+        document.querySelectorAll('.delete').forEach((btn, i) =>{
+            btn.addEventListener('click', ()=>{
+                btn.parentElement.remove();
+                movieDB.movies.splice(i, 1);
+                createMovieList(films, parent);
+                sortArr(movieDB.movies);
+            });
         });        
     }
     createMovieList(movieDB.movies, moveList);
 });
 
+ 
 
-
-/* 20:44 Udemy */
 
 
 
